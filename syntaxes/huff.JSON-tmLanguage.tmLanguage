@@ -1,0 +1,282 @@
+{
+  "fileTypes": ["huff"],
+  "name": "Huff",
+  "patterns": [
+    { "include": "#natspec" },
+    { "include": "#comment" },
+    { "include": "#number" },
+    { "include": "#declaration" },
+    { "include": "#interface" },
+    { "include": "#error" },
+    { "include": "#control" },
+    { "include": "#macro-call" },
+    { "include": "#opcodes" },
+    { "include": "#constant" }
+  ],
+  "repository": {
+    "natspec": {
+      "patterns": [
+        {
+          "begin": "/\\*\\*",
+          "end": "\\*/",
+          "name": "comment.block.documentation.huff",
+          "patterns": [{ "include": "#natspec-tags" }]
+        },
+        {
+          "begin": "///",
+          "end": "$",
+          "name": "comment.block.documentation.huff",
+          "patterns": [{ "include": "#natspec-tags" }]
+        }
+      ]
+    },
+    "natspec-tags": {
+      "patterns": [
+        { "include": "#natspec-tag-title" },
+        { "include": "#natspec-tag-author" },
+        { "include": "#natspec-tag-notice" },
+        { "include": "#natspec-tag-dev" },
+        { "include": "#natspec-tag-param" },
+        { "include": "#natspec-tag-return" }
+      ]
+    },
+    "natspec-tag-title": {
+      "match": "(@title)\\b",
+      "name": "storage.type.title.natspec"
+    },
+    "natspec-tag-author": {
+      "match": "(@author)\\b",
+      "name": "storage.type.author.natspec"
+    },
+    "natspec-tag-notice": {
+      "match": "(@notice)\\b",
+      "name": "storage.type.dev.natspec"
+    },
+    "natspec-tag-dev": {
+      "match": "(@dev)\\b",
+      "name": "storage.type.dev.natspec"
+    },
+    "natspec-tag-param": {
+      "match": "(@param)(\\s+([A-Za-z_]\\w*))?\\b",
+      "captures": {
+        "1": { "name": "storage.type.param.natspec" },
+        "3": { "name": "variable.other.natspec" }
+      }
+    },
+    "natspec-tag-return": {
+      "match": "(@return)\\b",
+      "name": "storage.type.return.natspec"
+    },
+    "comment": {
+      "patterns": [
+        { "include": "#comment-line" },
+        { "include": "#comment-block" }
+      ]
+    },
+    "comment-line": {
+      "match": "(?<!tp:)//.*?$",
+      "name": "comment.line.huff"
+    },
+    "comment-block": {
+      "begin": "/\\*",
+      "end": "\\*/",
+      "name": "comment.block.huff"
+    },
+    "control": {
+      "patterns": [{ "include": "#control-import" }]
+    },
+    "control-import": {
+      "match": "(#include)\\b",
+      "captures": {
+        "1": { "name": "keyword.control.import.huff" }
+      }
+    },
+    "number": {
+      "patterns": [
+        { "include": "#number-decimal" },
+        { "include": "#number-hex" }
+      ]
+    },
+    "number-decimal": {
+      "match": "\\b(\\d+(\\.\\d+)?)\\b",
+      "name": "constant.numeric.decimal.huff"
+    },
+    "number-hex": {
+      "match": "\\b(0[xX][a-fA-F0-9]+)\\b",
+      "name": "constant.numeric.hexadecimal.huff"
+    },
+    "declaration": {
+      "patterns": [
+        { "include": "#declaration-macro" },
+        { "include": "#declaration-fn" },
+        { "include": "#declaration-jumptable" },
+        { "include": "#declaration-jumptable-packed" },
+        { "include": "#predeclaration-template" }
+      ]
+    },
+    "declaration-macro": {
+      "match": "(#define\\s+macro)(\\s+([A-Za-z_]\\w*))\\b(\\s+=\\s+((takes)\\s*(\\((\\d+)\\)))(\\s+(returns)\\s*(\\((\\d+)\\))))?",
+      "captures": {
+        "1": { "name": "storage.macro.huff" },
+        "3": { "name": "entity.name.function.huff" },
+        "6": { "name": "storage.takes.huff" },
+        "8": { "name": "constant.numeric.decimal.huff" },
+        "10": { "name": "storage.returns.huff" },
+        "12": { "name": "constant.numeric.decimal.huff" }
+      }
+    },
+    "declaration-fn": {
+      "match": "(#define\\s+fn)(\\s+([A-Za-z_]\\w*))\\b(\\s+=\\s+((takes)\\s*(\\((\\d+)\\)))(\\s+(returns)\\s*(\\((\\d+)\\))))?",
+      "captures": {
+        "1": { "name": "storage.macro.huff" },
+        "3": { "name": "entity.name.function.huff" },
+        "6": { "name": "storage.takes.huff" },
+        "8": { "name": "constant.numeric.decimal.huff" },
+        "10": { "name": "storage.returns.huff" },
+        "12": { "name": "constant.numeric.decimal.huff" }
+      }
+    },
+    "declaration-jumptable": {
+      "match": "(#define\\s+jumptable)(\\s+([A-Za-z_]\\w*))\\b",
+      "captures": {
+        "1": { "name": "storage.macro.huff" },
+        "3": { "name": "entity.name.function.huff" }
+      }
+    },
+    "declaration-jumptable-packed": {
+      "match": "(#define\\s+jumptable__packed)(\\s+([A-Za-z_]\\w*))\\b",
+      "captures": {
+        "1": { "name": "storage.macro.huff" },
+        "3": { "name": "entity.name.function.huff" }
+      }
+    },
+
+    "error": {
+      "patterns": [{ "include": "#error-definition" }]
+    },
+    "error-definition": {
+      "match": "(#define\\s+error)(\\s+([A-Za-z_]\\w*))\\b",
+      "captures": {
+        "1": { "name": "storage.function.huff" },
+        "3": { "name": "entity.name.function.huff" },
+        "8": { "name": "keyword.modifier.huff" }
+      }
+    },
+
+    "interface": {
+      "patterns": [
+        { "include": "#interface-function" },
+        { "include": "#interface-event" },
+        { "include": "#interface-primitives" },
+        { "include": "#interface-extensions" }
+      ]
+    },
+    "interface-function": {
+      "match": "(#define\\s+function)(\\s+([A-Za-z_]\\w*))\\b",
+      "captures": {
+        "1": { "name": "storage.function.huff" },
+        "3": { "name": "entity.name.function.huff" },
+        "8": { "name": "keyword.modifier.huff" }
+      }
+    },
+    "interface-event": {
+      "match": "(#define\\s+event)(\\s+([A-Za-z_]\\w*))\\b",
+      "captures": {
+        "1": { "name": "storage.event.huff" },
+        "3": { "name": "entity.name.function.huff" },
+        "8": { "name": "keyword.modifier.huff" }
+      }
+    },
+    "interface-primitives": {
+      "match": "\\b(address|string\\d*|bytes\\d*|int\\d*|uint\\d*|bool|hash\\d*)\\b",
+      "captures": {
+        "1": { "name": "variable.parameter" }
+      }
+    },
+    "interface-extensions": {
+      "match": "\\b(nonpayable|view|returns)\\b",
+      "captures": {
+        "1": { "name": "storage.type.interface.huff" }
+      }
+    },
+
+    "predeclaration-template": {
+      "match": "((template)\\s+\\<\\s*((([A-Za-z0-9_]+)(\\s*,\\s*))*([A-Za-z0-9_]+))\\s*\\>)",
+      "captures": {
+        "2": { "name": "keyword.control.huff" },
+        "3": { "name": "variable.parameter" }
+      }
+    },
+    "opcodes": {
+      "patterns": [
+        { "include": "#opcodes-stop" },
+        { "include": "#opcodes-calculation" },
+        { "include": "#opcodes-stack" },
+        { "include": "#opcodes-io" },
+        { "include": "#opcodes-side-effects" },
+        { "include": "#template-parameter-call" }
+      ]
+    },
+    "opcodes-io": {
+      "match": "\\b(sstore|sload|mstore8|mstore|mload|pop|msize|balance|address|returndatacopy|returndatasize|extcodecopy|extcodesize|gasprice|caller|origin|gaslimit|difficulty|number|timestamp|coinbase|blockhash|codecopy|codesize|calldatacopy|calldatasize|calldataload|callvalue|gas)\\b",
+      "captures": {
+        "1": { "name": "entity.name.function.inputs.huff" }
+      }
+    },
+    "opcodes-side-effects": {
+      "match": "\\b(log4|log3|log2|log1|log0|jumpdest|getpc|jumpi|jump|create2|staticcall|delegatecall|callcode|call|create)\\b",
+      "captures": {
+        "1": { "name": "support.type.sideeffects.huff" }
+      }
+    },
+    "opcodes-calculation": {
+      "match": "\\b(not|xor|or|and|ror|rol|sar|shr|shl|keccak|sha3|byte|iszero|eq|sgt|slt|gt|lt|signextend|exp|mulmod|addmod|smod|mod|sdiv|div|sub|mul|add)\\b",
+      "captures": {
+        "1": { "name": "keyword.operator.arithmetic.huff" }
+      }
+    },
+
+    "opcodes-stop": {
+      "match": "\\b(selfdestruct|invalid|revert|return|stop)\\b",
+      "name": "support.type.exception.huff"
+    },
+    "opcodes-stack": {
+      "match": "\\b((swap1|dup1)[0-6]|(swap|dup)[1-9]|push3[0-2]|push[1-2][0-9]|push[1-9])\\b",
+      "name": "variable.other.push.huff"
+    },
+    "template-parameter-call": {
+      "match": "\\<\\s*[A-Za-z0-9_]+\\s*\\>",
+      "name": "variable.parameter"
+    },
+    "macro-call": {
+      "match": "(\\b([A-Za-z_]\\w*)\\s*)((\\<)\\s*((([A-Za-z_]\\w*)(\\s*,\\s*))*([A-Za-z_]\\w*))\\s*(\\>))?(\\()",
+      "captures": {
+        "1": { "name": "entity.name.function.huff" },
+        "2": { "name": "entity.name.function.huff" },
+        "5": { "name": "variable.parameter" }
+      }
+    },
+
+    "constant": {
+      "patterns": [
+        { "include": "#constant-definition" },
+        { "include": "#constant-reference" }
+      ]
+    },
+    "constant-definition": {
+      "match": "(#define\\s+constant)(\\s+([A-Za-z_]\\w*))\\b",
+      "captures": {
+        "1": { "name": "storage.constant.huff" },
+        "3": { "name": "constant.name.huff" }
+      }
+    },
+
+    "constant-reference": {
+      "match": "(\\[[A-Z_]+\\])",
+      "captures": {
+        "1": { "name": "constant.name.huff" }
+      }
+    }
+  },
+  "scopeName": "source.huff"
+}
