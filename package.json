@@ -1,6 +1,6 @@
 {
   "name": "huff-Language",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "huff ",
   "main": "syntaxes/huff.json",
   "scripts": {
