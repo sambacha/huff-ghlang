@@ -2,15 +2,14 @@
   "name": "huff-Language",
   "version": "1.0.0",
   "description": "huff ",
-  "main": "index.js",
+  "main": "syntaxes/huff.json",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sambacha/huff-ghlang.git"
   },
-  "keywords": [],
+  "keywords": ["huff", "ethereum", "evm"],
   "author": "sam bacha",
   "license": "MIT",
   "bugs": {
